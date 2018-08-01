@@ -1,5 +1,12 @@
 from __future__ import print_function
 
+def canonicalise(grid):
+    """Convert any sets of 1 into ints"""
+    for row in grid:
+        for colnum, cell in enumerate(row):
+            if isinstance(cell, set) and len(cell) == 1:
+                row[colnum] = cell.pop()
+
 def initialise(gridstring):
     """Take a string-format grid and return a 2D array of sets
     
@@ -13,7 +20,7 @@ def initialise(gridstring):
     # Initialise an empty grid
     grid = []
     for _ in range(9):
-        grid.append([set() for _ in range(9)])
+        grid.append([None] * 9)
     
     # Set numbers
     for rownum, row in enumerate(gridstring.split('\n')):
@@ -58,3 +65,5 @@ def prune_rows(grid):
                 cell.remove(key)
                 changes = True
     return changes
+
+

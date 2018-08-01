@@ -16,6 +16,13 @@ TESTGRID = """
    4   67
 """
 
+class CanonicaliseTest(unittest.TestCase):
+    def test_canonicalise(self):
+        grid = [[1, 2, 3, set((4,5)), set((4,5)), set((6,7,8)), set((6,7,8)), set((6,7,8)), set((9,))]]
+        sudoku.canonicalise(grid)
+        self.assertEqual(grid,
+            [[1, 2, 3, set((4,5)), set((4,5)), set((6,7,8)), set((6,7,8)), set((6,7,8)), 9]])
+
 class InitialiseTest(unittest.TestCase):
     def test_init(self):
         grid = sudoku.initialise(TESTGRID)
@@ -31,6 +38,12 @@ class InitialiseTest(unittest.TestCase):
         
         self.assertEqual(grid, expected)
         self.assertEqual(sudoku.to_string(grid).strip('\n'), TESTGRID.strip('\n'))
+    
+    def test_init_full(self):
+        gridstring = "123456789\n"*9
+        grid = sudoku.initialise(gridstring)
+        for row in grid:
+            self.assertEqual(row, [1,2,3,4,5,6,7,8,9])
 
 class PruneTest(unittest.TestCase):
     def test_row_prune(self):
