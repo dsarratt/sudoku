@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+from copy import deepcopy
+
 def canonicalise(grid):
     """Convert any sets of 1 into ints"""
     for row in grid:
@@ -125,7 +127,7 @@ def prune_cells(grid):
     return changes
 
 
-def solve(grid):
+def repeat_prunes(grid):
     """Naive solver, won't make guesses"""
     while True:
         changes = prune_cells(grid)
@@ -143,3 +145,43 @@ def solve(grid):
             print("I'm out of ideas. Grid is:")
             print(to_string(grid))
             return False
+
+def solve(grid):
+    """Call repeat_prunes(), then if the grid isn't solved
+    guess a cell and recurse.
+    """
+    try:
+        solved = repeat_prunes(grid)
+    except ValueError:
+        # Well, this was an impossible solution
+        return False
+    if solved:
+        # Trivially solveable, hooray
+        return True
+    
+    # If not trivially solvable, iterate over some possibilities
+    print("Guessing a cell...")
+    best_candidate = '9'*10
+    x, y = None, None
+    for rownum, row in enumerate(grid):
+        for colnum, cell in enumerate(row):
+            if isinstance(cell, set) and len(cell) < len(best_candidate):
+                best_candidate = cell
+                x, y = rownum, colnum
+    print("Best cell is ({0},{1})".format(x, y), best_candidate)
+    for candidate in best_candidate:
+        print("Guessing", candidate)
+        subgrid = deepcopy(grid)
+        subgrid[x][y] = candidate
+        if solve(subgrid):
+            # Hooray, we've solved it!
+            # Update the primary grid in-place
+            for rownum, row in enumerate(subgrid):
+                for colnum, cell in enumerate(row):
+                    grid[rownum][colnum] = cell
+            return True
+        else:
+            print("Bad guess, will try something else")
+    
+    # Oh god how did we end up here??
+    raise RuntimeError("Couldn't solve =(")
