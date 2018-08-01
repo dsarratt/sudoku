@@ -6,6 +6,7 @@ def initialise(gridstring):
     Coords are Y,X (row, then col)
     """
     # Validate the string
+    gridstring = gridstring.strip('\n')
     if gridstring.count('\n') < 8:
         raise ValueError('gridstring should be 9 lines long')
     
@@ -29,3 +30,26 @@ def initialise(gridstring):
                 grid[rownum][colnum] = set(range(1, 10))
     
     return grid
+
+def to_string(grid):
+    """Given a grid, return a string with the known chars"""
+    chars = []
+    for row in grid:
+        for cell in row:
+            if len(cell) == 1:
+                chars.append(str(next(iter(cell))))
+            else:
+                chars.append(' ')
+        chars.append('\n')
+    return ''.join(chars)
+
+def prune_rows(grid):
+    """Given a grid, scan each row for solved cells, and remove those
+    numbers from every other set in the row.
+    """
+    for row in grid:
+        for cell in row:
+            if len(cell) == 1:
+                known = cell.pop()
+                [c2.discard(known) for c2 in row]
+                cell.add(known)
