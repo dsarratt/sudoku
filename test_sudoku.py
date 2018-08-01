@@ -48,7 +48,7 @@ class PruneTest(unittest.TestCase):
         grid = sudoku.initialise(testgrid)
         self.assertEqual(grid[0],
             [set([1]), set([2]), set([3]), set([4]), set([5]), set([6]), set([7]), set([8]), set([1,2,3,4,5,6,7,8,9])])
-        sudoku.prune_rows(grid)
+        self.assertTrue(sudoku.prune_rows(grid))
         self.assertEqual(grid[0],
             [set([1]), set([2]), set([3]), set([4]), set([5]), set([6]), set([7]), set([8]), set([9])])
         
@@ -70,14 +70,14 @@ class PruneTest(unittest.TestCase):
             firstrow.append(set([1,2,3,4,5,6,7,8,9]))
         self.assertEqual(grid[0], firstrow)
         
-        sudoku.prune_rows(grid)
+        self.assertTrue(sudoku.prune_rows(grid))
         firstrow = [set([1])]
         for _ in range(8):
             firstrow.append(set([2,3,4,5,6,7,8,9]))
         self.assertEqual(grid[0], firstrow)
         
         # Repeat prunings should be harmless
-        sudoku.prune_rows(grid)
+        self.assertFalse(sudoku.prune_rows(grid))
         sudoku.prune_rows(grid)
         sudoku.prune_rows(grid)
         self.assertEqual(grid[0], firstrow)

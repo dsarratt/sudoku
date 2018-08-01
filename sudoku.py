@@ -45,11 +45,16 @@ def to_string(grid):
 
 def prune_rows(grid):
     """Given a grid, scan each row for solved cells, and remove those
-    numbers from every other set in the row.
+    numbers from every other cell in the row.
+    
+    Return True or False depending on whether any pruning was done.
     """
+    changes = False
     for row in grid:
-        for cell in row:
-            if len(cell) == 1:
-                known = cell.pop()
-                [c2.discard(known) for c2 in row]
-                cell.add(known)
+        singletons = [next(iter(cell)) for cell in row if len(cell) == 1]
+        for numb in singletons:
+            contains_sing = [cell for cell in row if numb in cell and len(cell) > 1]
+            for candidate in contains_sing:
+                candidate.remove(numb)
+                changes = True
+    return changes
