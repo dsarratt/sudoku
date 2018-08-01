@@ -1,6 +1,9 @@
 from __future__ import print_function
 
 from copy import deepcopy
+import logging
+
+# logging.basicConfig()
 
 def canonicalise(grid):
     """Convert any sets of 1 into ints"""
@@ -136,14 +139,14 @@ def repeat_prunes(grid):
         canonicalise(grid)
         validate(grid)
         if changes:
-            print("Pruning...")
+            logging.debug("Pruning...")
         elif is_solved(grid):
-            print("Solved!")
-            print(to_string(grid))
+            logging.info("Solved!")
+            logging.info(to_string(grid))
             return True
         else:
-            print("I'm out of ideas. Grid is:")
-            print(to_string(grid))
+            logging.debug("I'm out of ideas. Grid is:")
+            logging.debug(to_string(grid))
             return False
 
 def solve(grid):
@@ -154,6 +157,9 @@ def solve(grid):
     value of True indicates success, False indicates an
     unsolveable grid.
     """
+    if isinstance(grid, basestring):
+        grid = initialise(grid)
+    
     try:
         solved = repeat_prunes(grid)
     except ValueError:
@@ -164,7 +170,7 @@ def solve(grid):
         return True
     
     # If not trivially solvable, iterate over some possibilities
-    print("Guessing a cell...")
+    logging.debug("Guessing a cell...")
     best_candidate = '9'*10
     x, y = None, None
     for rownum, row in enumerate(grid):
@@ -172,9 +178,9 @@ def solve(grid):
             if isinstance(cell, set) and len(cell) < len(best_candidate):
                 best_candidate = cell
                 x, y = rownum, colnum
-    print("Best cell is ({0},{1})".format(x, y), best_candidate)
+    logging.debug("Best cell is ({0},{1})".format(x, y), best_candidate)
     for candidate in best_candidate:
-        print("Guessing", candidate)
+        logging.debug("Guessing", candidate)
         subgrid = deepcopy(grid)
         subgrid[x][y] = candidate
         if solve(subgrid):
@@ -185,8 +191,8 @@ def solve(grid):
                     grid[rownum][colnum] = cell
             return True
         else:
-            print("Bad guess, will try something else")
+            logging.debug("Bad guess, will try something else")
     
     # Oh god how did we end up here??
-    print("All my guesses were unsolveable")
+    logging.debug("All my guesses were unsolveable")
     return False
