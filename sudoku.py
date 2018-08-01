@@ -102,18 +102,13 @@ def to_string(grid):
         chars.append('\n')
     return ''.join(chars)
 
-def prune_columns(grid):
-    """Given a grid, scan each column for solved cells, and remove those
-    numbers from every other cell in the column.
-    
-    Return True or False depending on whether any pruning was done.
-    """
-    cols = to_cols(grid)
-    return prune_cells(cols)
-
 def prune_cells(grid):
     """Given a grid, scan each row for solved cells, and remove those
     numbers from every other cell in the row.
+    
+    Note that 'grid' can be an iterable of rows, columns, or 3x3 squares.
+    Since the component cells (sets) are modified in-place it still works
+    if you rearrange things.
     
     Return True or False depending on whether any pruning was done.
     """
@@ -127,9 +122,10 @@ def prune_cells(grid):
                 changes = True
     return changes
 
-
 def repeat_prunes(grid):
-    """Naive solver, won't make guesses"""
+    """
+    Repeatedly prune candidates from unknown cells using the known cells.
+    """
     while True:
         changes = prune_cells(grid)
         changes |= prune_cells(to_columns(grid))
