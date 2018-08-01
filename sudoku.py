@@ -49,6 +49,27 @@ def validate(grid):
                 raise ValueError("Cell has no candidates!")
     # TODO: singleton checks
 
+def to_columns(grid):
+    """Return a list of columns for the grid"""
+    cols = []
+    for _ in range(9):
+        cols.append([])
+    for row in grid:
+        for colnum, cell in enumerate(row):
+            cols[colnum].append(cell)
+    return cols
+
+def to_squares(grid):
+    """Return a list of squares for the grid"""
+    squares = []
+    for _ in range(9):
+        squares.append([])
+    for rownum, row in enumerate(grid):
+        for colnum, cell in enumerate(row):
+            squareno = colnum // 3 + (rownum // 3) * 3
+            squares[squareno].append(cell)
+    return squares
+
 def to_string(grid):
     """Given a grid, return a string with the known chars"""
     chars = []
@@ -61,7 +82,16 @@ def to_string(grid):
         chars.append('\n')
     return ''.join(chars)
 
-def prune_rows(grid):
+def prune_columns(grid):
+    """Given a grid, scan each column for solved cells, and remove those
+    numbers from every other cell in the column.
+    
+    Return True or False depending on whether any pruning was done.
+    """
+    cols = to_cols(grid)
+    return prune_cells(cols)
+
+def prune_cells(grid):
     """Given a grid, scan each row for solved cells, and remove those
     numbers from every other cell in the row.
     
@@ -76,5 +106,4 @@ def prune_rows(grid):
                 cell.remove(key)
                 changes = True
     return changes
-
 

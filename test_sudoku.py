@@ -71,7 +71,7 @@ class PruneTest(unittest.TestCase):
             ))
         grid = sudoku.initialise(testgrid)
         self.assertEqual(grid[0], [1,2,3,4,5,6,7,8, set([1,2,3,4,5,6,7,8,9])])
-        self.assertTrue(sudoku.prune_rows(grid))
+        self.assertTrue(sudoku.prune_cells(grid))
         # Note that the grid hasn't been canonicalised yet
         self.assertEqual(grid[0], [1,2,3,4,5,6,7,8, set([9])])
     
@@ -93,14 +93,68 @@ class PruneTest(unittest.TestCase):
             firstrow.append(set([1,2,3,4,5,6,7,8,9]))
         self.assertEqual(grid[0], firstrow)
         
-        self.assertTrue(sudoku.prune_rows(grid))
+        self.assertTrue(sudoku.prune_cells(grid))
         firstrow = [1]
         for _ in range(8):
             firstrow.append(set([2,3,4,5,6,7,8,9]))
         self.assertEqual(grid[0], firstrow)
         
         # Repeat prunings should be harmless
-        self.assertFalse(sudoku.prune_rows(grid))
-        sudoku.prune_rows(grid)
-        sudoku.prune_rows(grid)
+        self.assertFalse(sudoku.prune_cells(grid))
+        sudoku.prune_cells(grid)
+        sudoku.prune_cells(grid)
         self.assertEqual(grid[0], firstrow)
+
+class TransformTests(unittest.TestCase):
+    """Test the transformations to columns or squares"""
+    def test_columns(self):
+        testgrid = '\n'.join((
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            ))
+        grid = sudoku.initialise(testgrid)
+        cols = sudoku.to_columns(grid)
+        self.assertEqual(cols[0], [1]*9)
+        self.assertEqual(cols[4], [5]*9)
+        self.assertEqual(cols[8], [9]*9)
+    
+    def test_squares(self):
+        testgrid = '\n'.join((
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            "123456789",
+            ))
+        grid = sudoku.initialise(testgrid)
+        squares = sudoku.to_squares(grid)
+        self.assertEqual(squares[0], [1,2,3,1,2,3,1,2,3])
+        self.assertEqual(squares[8], [7,8,9,7,8,9,7,8,9])
+        
+        testgrid = '\n'.join((
+            "111222333",
+            "111222333",
+            "111222333",
+            "444555666",
+            "444555666",
+            "444555666",
+            "777888999",
+            "777888999",
+            "777888999",
+            ))
+        grid = sudoku.initialise(testgrid)
+        squares = sudoku.to_squares(grid)
+        self.assertEqual(squares[0], [1]*9)
+        self.assertEqual(squares[5], [6]*9)
+        self.assertEqual(squares[8], [9]*9)
