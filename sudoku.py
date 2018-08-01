@@ -38,6 +38,17 @@ def initialise(gridstring):
     
     return grid
 
+def validate(grid):
+    """Raise an error if any cells have no candidates, or if there
+    are conflicting singletons.
+    """
+    # Check for any cells which have no candidates
+    for row in grid:
+        for cell in row:
+            if isinstance(cell, set) and len(cell) == 0:
+                raise ValueError("Cell has no candidates!")
+    # TODO: singleton checks
+
 def to_string(grid):
     """Given a grid, return a string with the known chars"""
     chars = []

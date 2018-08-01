@@ -45,6 +45,17 @@ class InitialiseTest(unittest.TestCase):
         for row in grid:
             self.assertEqual(row, [1,2,3,4,5,6,7,8,9])
 
+class ValidateTest(unittest.TestCase):
+    """Test validation"""
+    def test_no_candidates(self):
+        """If a cell has no candidates, the puzzle is malformed"""
+        grid = [[1, 2, 3, set((4,5)), set((4,5)), set((6,7,8)), set((6,7,8)), set((6,7,8)), set((9,))]]
+        self.assertIsNone(sudoku.validate(grid))
+        
+        grid[0][-1] = set()
+        with self.assertRaises(ValueError):
+            sudoku.validate(grid)
+
 class PruneTest(unittest.TestCase):
     def test_row_prune(self):
         testgrid = '\n'.join((
