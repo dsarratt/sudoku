@@ -3,8 +3,6 @@ from __future__ import print_function
 from copy import deepcopy
 import logging
 
-# logging.basicConfig()
-
 def canonicalise(grid):
     """Convert any sets of 1 into ints"""
     for row in grid:
@@ -196,3 +194,9 @@ def solve(grid):
     # Oh god how did we end up here??
     logging.debug("All my guesses were unsolveable")
     return False
+
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+    import fileinput
+    GRID = "".join(fileinput.input())
+    solve(GRID)
