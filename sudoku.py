@@ -184,4 +184,5 @@ def solve(grid):
             print("Bad guess, will try something else")
     
     # Oh god how did we end up here??
-    raise RuntimeError("Couldn't solve =(")
+    print("All my guesses were unsolveable")
+    return False
