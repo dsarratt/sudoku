@@ -61,7 +61,7 @@ def validate(grid):
     
     # Check for any rows which have the same singleton repeatedly
     for row in grid:
-        digits = set((1,2,3,4,5,6,7,8,9))
+        digits = set(range(1, 10))
         singletons = [cell for cell in row if isinstance(cell, int)]
         for cell in singletons:
             try:
@@ -168,17 +168,17 @@ def solve(grid):
     # If not trivially solvable, iterate over some possibilities
     logging.debug("Guessing a cell...")
     best_candidate = '9'*10
-    x, y = None, None
+    bestrow, bestcol = None, None
     for rownum, row in enumerate(grid):
         for colnum, cell in enumerate(row):
             if isinstance(cell, set) and len(cell) < len(best_candidate):
                 best_candidate = cell
-                x, y = rownum, colnum
-    logging.debug("Best cell is ({0},{1})".format(x, y), best_candidate)
+                bestrow, bestcol = rownum, colnum
+    logging.debug("Best cell is (%s, %s) %s", bestrow, bestcol, best_candidate)
     for candidate in best_candidate:
-        logging.debug("Guessing", candidate)
+        logging.debug("Guessing %s", candidate)
         subgrid = deepcopy(grid)
-        subgrid[x][y] = candidate
+        subgrid[bestrow][bestcol] = candidate
         if solve(subgrid):
             # Hooray, we've solved it!
             # Update the primary grid in-place
@@ -189,7 +189,6 @@ def solve(grid):
         else:
             logging.debug("Bad guess, will try something else")
     
-    # Oh god how did we end up here??
     logging.debug("All my guesses were unsolveable")
     return False
 
