@@ -38,6 +38,14 @@ def initialise(gridstring):
     
     return grid
 
+def is_solved(grid):
+    """Return whether a grid is solved"""
+    for row in grid:
+        for cell in row:
+            if isinstance(cell, set):
+                return False
+    return True
+
 def validate(grid):
     """Raise an error if any cells have no candidates, or if there
     are conflicting singletons.
@@ -116,3 +124,22 @@ def prune_cells(grid):
                 changes = True
     return changes
 
+
+def solve(grid):
+    """Naive solver, won't make guesses"""
+    while True:
+        changes = prune_cells(grid)
+        changes |= prune_cells(to_columns(grid))
+        changes |= prune_cells(to_squares(grid))
+        canonicalise(grid)
+        validate(grid)
+        if changes:
+            print("Pruning...")
+        elif is_solved(grid):
+            print("Solved!")
+            print(to_string(grid))
+            return True
+        else:
+            print("I'm out of ideas. Grid is:")
+            print(to_string(grid))
+            return False
