@@ -136,6 +136,8 @@ def repeat_prunes(grid):
         changes |= prune_cells(to_squares(grid))
         canonicalise(grid)
         validate(grid)
+        validate(to_columns(grid))
+        validate(to_squares(grid))
         if changes:
             logging.debug("Pruning...")
         elif is_solved(grid):
