@@ -170,3 +170,59 @@ class TransformTests(unittest.TestCase):
         self.assertEqual(squares[0], [1]*9)
         self.assertEqual(squares[5], [6]*9)
         self.assertEqual(squares[8], [9]*9)
+
+class SolverTest(unittest.TestCase):
+    """Tricky puzzles to prove recursive solving works"""
+    def test_1611984609(self):
+        """http://www.websudoku.com/?level=4&set_id=1611984609"""
+        testgrid = '\n'.join((
+            "5   4 8  ",
+            "   7     ",
+            "63  82 1 ",
+            "  1   2 9",
+            "  6   5  ",
+            "9 7   3  ",
+            " 4 15  27",
+            "     7   ",
+            "  5 9   4",
+            ))
+        grid = sudoku.initialise(testgrid)
+        self.assertTrue(sudoku.solve(grid))
+        self.assertEqual(grid, [
+            [5,7,2,6,4,1,8,9,3],
+            [1,9,8,7,3,5,4,6,2],
+            [6,3,4,9,8,2,7,1,5],
+            [3,5,1,8,7,6,2,4,9],
+            [4,8,6,3,2,9,5,7,1],
+            [9,2,7,5,1,4,3,8,6],
+            [8,4,9,1,5,3,6,2,7],
+            [2,1,3,4,6,7,9,5,8],
+            [7,6,5,2,9,8,1,3,4],
+            ])
+    
+    def test_inkala(self):
+        """https://www.telegraph.co.uk/news/science/science-news/9359579/Worlds-hardest-sudoku-can-you-crack-it.html"""
+        testgrid = '\n'.join((
+            "8        ",
+            "  36     ",
+            " 7  9 2  ",
+            " 5   7   ",
+            "    457  ",
+            "   1   3 ",
+            "  1    68",
+            "  85   1 ",
+            " 9    4  ",
+            ))
+        grid = sudoku.initialise(testgrid)
+        self.assertTrue(sudoku.solve(grid))
+        self.assertEqual(grid, [
+            [8,2,5,7,1,3,6,9,4],
+            [9,4,3,6,5,2,8,7,1],
+            [1,7,6,4,9,8,2,5,3],
+            [3,5,2,9,8,7,1,4,6],
+            [6,1,9,3,4,5,7,8,2],
+            [7,8,4,1,2,6,9,3,5],
+            [4,3,1,2,7,9,5,6,8],
+            [2,6,8,5,7,4,3,1,9],
+            [5,9,6,8,3,1,4,2,7],
+            ])
