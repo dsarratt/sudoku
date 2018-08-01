@@ -25,7 +25,7 @@ class InitialiseTest(unittest.TestCase):
             expected.append(row)
             for cell in rowstring:
                 if cell.isdigit():
-                    row.append(set([int(cell)]))
+                    row.append(int(cell))
                 else:
                     row.append(set((1,2,3,4,5,6,7,8,9)))
         
@@ -46,12 +46,11 @@ class PruneTest(unittest.TestCase):
             " "*9,
             ))
         grid = sudoku.initialise(testgrid)
-        self.assertEqual(grid[0],
-            [set([1]), set([2]), set([3]), set([4]), set([5]), set([6]), set([7]), set([8]), set([1,2,3,4,5,6,7,8,9])])
+        self.assertEqual(grid[0], [1,2,3,4,5,6,7,8, set([1,2,3,4,5,6,7,8,9])])
         self.assertTrue(sudoku.prune_rows(grid))
-        self.assertEqual(grid[0],
-            [set([1]), set([2]), set([3]), set([4]), set([5]), set([6]), set([7]), set([8]), set([9])])
-        
+        # Note that the grid hasn't been canonicalised yet
+        self.assertEqual(grid[0], [1,2,3,4,5,6,7,8, set([9])])
+    
     def test_row_2(self):
         testgrid = '\n'.join((
             "1        ",
@@ -65,13 +64,13 @@ class PruneTest(unittest.TestCase):
             " "*9,
             ))
         grid = sudoku.initialise(testgrid)
-        firstrow = [set([1])]
+        firstrow = [1]
         for _ in range(8):
             firstrow.append(set([1,2,3,4,5,6,7,8,9]))
         self.assertEqual(grid[0], firstrow)
         
         self.assertTrue(sudoku.prune_rows(grid))
-        firstrow = [set([1])]
+        firstrow = [1]
         for _ in range(8):
             firstrow.append(set([2,3,4,5,6,7,8,9]))
         self.assertEqual(grid[0], firstrow)

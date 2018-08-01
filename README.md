@@ -1,5 +1,4 @@
-The sudoku grid is represented as a 2D array of sets
+The sudoku grid is represented as a 2D array
 
-If a cell is solved, it's a set of one
-Otherwise, it's a set of all possible values
-
+Solved cells are stored as ints, unsolved cells are stored as
+a set of possible values

@@ -25,7 +25,7 @@ def initialise(gridstring):
         
         for colnum, cell in enumerate(row):
             try:
-                grid[rownum][colnum] = set([int(cell)])
+                grid[rownum][colnum] = int(cell)
             except ValueError:
                 grid[rownum][colnum] = set(range(1, 10))
     
@@ -36,8 +36,8 @@ def to_string(grid):
     chars = []
     for row in grid:
         for cell in row:
-            if len(cell) == 1:
-                chars.append(str(next(iter(cell))))
+            if isinstance(cell, int):
+                chars.append(str(cell))
             else:
                 chars.append(' ')
         chars.append('\n')
@@ -51,10 +51,10 @@ def prune_rows(grid):
     """
     changes = False
     for row in grid:
-        singletons = [next(iter(cell)) for cell in row if len(cell) == 1]
-        for numb in singletons:
-            contains_sing = [cell for cell in row if numb in cell and len(cell) > 1]
-            for candidate in contains_sing:
-                candidate.remove(numb)
+        singletons = [cell for cell in row if isinstance(cell, int)]
+        for key in singletons:
+            prunable = [cell for cell in row if isinstance(cell, set) and key in cell]
+            for cell in prunable:
+                cell.remove(key)
                 changes = True
     return changes
