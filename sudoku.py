@@ -149,6 +149,10 @@ def repeat_prunes(grid):
 def solve(grid):
     """Call repeat_prunes(), then if the grid isn't solved
     guess a cell and recurse.
+    
+    Note that solving is done in-place on the grid. A return
+    value of True indicates success, False indicates an
+    unsolveable grid.
     """
     try:
         solved = repeat_prunes(grid)
