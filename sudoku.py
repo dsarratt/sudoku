@@ -47,7 +47,16 @@ def validate(grid):
         for cell in row:
             if isinstance(cell, set) and len(cell) == 0:
                 raise ValueError("Cell has no candidates!")
-    # TODO: singleton checks
+    
+    # Check for any rows which have the same singleton repeatedly
+    for row in grid:
+        digits = set((1,2,3,4,5,6,7,8,9))
+        singletons = [cell for cell in row if isinstance(cell, int)]
+        for cell in singletons:
+            try:
+                digits.remove(cell)
+            except KeyError:
+                raise ValueError("Digit {0} seen more than once".format(cell))
 
 def to_columns(grid):
     """Return a list of columns for the grid"""

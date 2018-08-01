@@ -55,6 +55,18 @@ class ValidateTest(unittest.TestCase):
         grid[0][-1] = set()
         with self.assertRaises(ValueError):
             sudoku.validate(grid)
+    
+    def test_ok(self):
+        """Test a grid with conflicting cells"""
+        grid = [[1, 2, 3, set((4,5)), set((4,5)), set((6,7,8)), set((6,7,8)), set((6,7,8)), set((8, 9))]]
+        self.assertIsNone(sudoku.validate(grid))
+        
+        grid[0][-1] = 9
+        self.assertIsNone(sudoku.validate(grid))
+        
+        grid[0][-1] = 1
+        with self.assertRaises(ValueError):
+            sudoku.validate(grid)
 
 class PruneTest(unittest.TestCase):
     def test_row_prune(self):
