@@ -166,6 +166,7 @@ def solve(grid):
         return True
     
     # If not trivially solvable, iterate over some possibilities
+    # The best cell is the one with the smallest number of candidates
     logging.debug("Guessing a cell...")
     best_candidate = '9'*10
     bestrow, bestcol = None, None
