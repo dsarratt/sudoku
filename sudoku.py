@@ -2,6 +2,13 @@ from __future__ import print_function
 
 from copy import deepcopy
 import logging
+import sys
+
+# Python 2/3 compat
+if sys.version_info[0] == 2:
+    STRING_TYPE = basestring
+else:
+    STRING_TYPE = str
 
 def canonicalise(grid):
     """Convert any sets of 1 into ints"""
@@ -153,7 +160,7 @@ def solve(grid):
     value of True indicates success, False indicates an
     unsolveable grid.
     """
-    if isinstance(grid, basestring):
+    if isinstance(grid, STRING_TYPE):
         grid = initialise(grid)
     
     try:
