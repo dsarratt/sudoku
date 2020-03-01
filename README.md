@@ -1,5 +1,9 @@
 # Sudoku solver
 
+## Overview
+
+A small sudoku solver written in Python. Runs under python 2 and 3.
+
 ## Usage
 
 Call sudoku.solve(), pass it a string consisting of nine lines
